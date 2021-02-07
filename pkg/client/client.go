@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+
+	"github.com/d0lim/things-go-api/common"
 )
 
 const (
@@ -17,26 +19,9 @@ var (
 	ErrUnauthorized = errors.New("unauthorized")
 )
 
-// Client is a culturedcode cloud client. It can be used to interact with the
-// things cloud to manage your data.
-type Client struct {
-	Endpoint string
-	EMail    string
-	password string
-
-	client *http.Client
-	common service
-
-	Accounts *AccountService
-}
-
-type service struct {
-	client *Client
-}
-
 // New initializes a things client
-func New(endpoint, email, password string) *Client {
-	c := &Client{
+func New(endpoint, email, password string) *common.Client {
+	c := &common.Client{
 		Endpoint: endpoint,
 		EMail:    email,
 		password: password,
@@ -44,14 +29,14 @@ func New(endpoint, email, password string) *Client {
 		client: &http.Client{},
 	}
 	c.common.client = c
-	c.Accounts = (*AccountService)(&c.common)
+	c.Accounts = (*common.AccountService)(&c.common)
 	return c
 }
 
 // ThingsUserAgent is the http user-agent header set by things for mac Version 3.1.0(30100506)
 const ThingsUserAgent = "ThingsMac/30100506mas"
 
-func (c *Client) do(req *http.Request) (*http.Response, error) {
+func (c *common.Client) do(req *http.Request) (*http.Response, error) {
 	uri := fmt.Sprintf("%s%s", c.Endpoint, req.URL)
 	u, err := url.Parse(uri)
 	if err != nil {

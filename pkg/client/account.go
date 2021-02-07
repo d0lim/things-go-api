@@ -5,19 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"github.com/d0lim/things-go-api/common"
 )
 
-type accountRequestBody struct {
-	Password           string `json:"password,omitempty"`
-	SLAVersionAccepted string `json:"SLA-version-accepted,omitempty"`
-	ConfirmationCode   string `json:"confirmation-code,omitempty"`
-}
-
-// AccountService allows account specific interaction with thingscloud
-type AccountService service
-
 // Delete deletes your current thingscloud account. This cannot be reversed
-func (s *AccountService) Delete() error {
+func (s *common.AccountService) Delete() error {
 	req, err := http.NewRequest("DELETE", fmt.Sprintf("/account/%s", s.client.EMail), nil)
 	if err != nil {
 		return err
@@ -38,8 +31,8 @@ func (s *AccountService) Delete() error {
 }
 
 // Confirm finishes the account creation by providing the email token send by thingscloud
-func (s *AccountService) Confirm(code string) error {
-	data, err := json.Marshal(accountRequestBody{
+func (s *common.AccountService) Confirm(code string) error {
+	data, err := json.Marshal(common.accountRequestBody{
 		ConfirmationCode: code,
 	})
 	if err != nil {
@@ -65,8 +58,8 @@ func (s *AccountService) Confirm(code string) error {
 }
 
 // SignUp creates a new thingscloud account and returns a configured client
-func (s *AccountService) SignUp(email, password string) (*Client, error) {
-	data, err := json.Marshal(accountRequestBody{
+func (s *common.AccountService) SignUp(email, password string) (*common.Client, error) {
+	data, err := json.Marshal(common.accountRequestBody{
 		Password:           password,
 		SLAVersionAccepted: "https://thingscloud.appspot.com/sla/v5.html",
 	})
@@ -93,8 +86,8 @@ func (s *AccountService) SignUp(email, password string) (*Client, error) {
 // ChangePassword allows you to change your account password.
 // Because things does not work with sessions you need to create a new client instance after
 // executing this method
-func (s *AccountService) ChangePassword(newPassword string) (*Client, error) {
-	data, err := json.Marshal(accountRequestBody{
+func (s *common.AccountService) ChangePassword(newPassword string) (*common.Client, error) {
+	data, err := json.Marshal(common.accountRequestBody{
 		Password: newPassword,
 	})
 	if err != nil {
