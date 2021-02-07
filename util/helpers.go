@@ -3,7 +3,7 @@ package util
 import (
 	"time"
 
-	"github.com/d0lim/things-go-api/pkg/common"
+	"github.com/d0lim/things-go-api/common"
 )
 
 // StringPointer returns a pointer to a string
