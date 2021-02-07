@@ -1,8 +1,10 @@
-package common
+package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"net/url"
 	"time"
 )
 
@@ -22,10 +24,28 @@ type Client struct {
 	EMail    string
 	password string
 
-	client *http.Client
-	common service
+	client    *http.Client
+	commonSvc service
 
 	Accounts *AccountService
+}
+
+func (c *Client) do(req *http.Request) (*http.Response, error) {
+	uri := fmt.Sprintf("%s%s", c.Endpoint, req.URL)
+	u, err := url.Parse(uri)
+	if err != nil {
+		return nil, err
+	}
+	req.URL = u
+
+	req.Header.Set("Authorization", fmt.Sprintf("Password %s", c.password))
+	req.Header.Set("User-Agent", ThingsUserAgent)
+	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Content-Encoding", "UTF8")
+	req.Header.Set("Accept-Language", "en-us")
+
+	return c.client.Do(req)
 }
 
 type service struct {

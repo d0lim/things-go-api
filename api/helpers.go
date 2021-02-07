@@ -1,9 +1,7 @@
-package util
+package api
 
 import (
 	"time"
-
-	"github.com/d0lim/things-go-api/common"
 )
 
 // StringPointer returns a pointer to a string
@@ -12,17 +10,17 @@ func StringPointer(str string) *string {
 }
 
 // StatusPointer returns a pointer to a TaskStatus
-func StatusPointer(val common.TaskStatus) *common.TaskStatus {
+func StatusPointer(val TaskStatus) *TaskStatus {
 	return &val
 }
 
 // SchedulePointer returns a pointer to a TaskSchedule
-func SchedulePointer(val common.TaskSchedule) *common.TaskSchedule {
+func SchedulePointer(val TaskSchedule) *TaskSchedule {
 	return &val
 }
 
 // TimePointer returns a pointer to a Time
-func TimePointer(val time.Time) *common.Timestamp {
-	ts := common.Timestamp(val)
+func TimePointer(val time.Time) *Timestamp {
+	ts := Timestamp(val)
 	return &ts
 }

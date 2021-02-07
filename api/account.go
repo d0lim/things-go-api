@@ -1,16 +1,14 @@
-package client
+package api
 
 import (
 	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
-
-	"github.com/d0lim/things-go-api/common"
 )
 
 // Delete deletes your current thingscloud account. This cannot be reversed
-func (s *common.AccountService) Delete() error {
+func (s *AccountService) Delete() error {
 	req, err := http.NewRequest("DELETE", fmt.Sprintf("/account/%s", s.client.EMail), nil)
 	if err != nil {
 		return err
@@ -31,8 +29,8 @@ func (s *common.AccountService) Delete() error {
 }
 
 // Confirm finishes the account creation by providing the email token send by thingscloud
-func (s *common.AccountService) Confirm(code string) error {
-	data, err := json.Marshal(common.accountRequestBody{
+func (s *AccountService) Confirm(code string) error {
+	data, err := json.Marshal(accountRequestBody{
 		ConfirmationCode: code,
 	})
 	if err != nil {
@@ -58,8 +56,8 @@ func (s *common.AccountService) Confirm(code string) error {
 }
 
 // SignUp creates a new thingscloud account and returns a configured client
-func (s *common.AccountService) SignUp(email, password string) (*common.Client, error) {
-	data, err := json.Marshal(common.accountRequestBody{
+func (s *AccountService) SignUp(email, password string) (*Client, error) {
+	data, err := json.Marshal(accountRequestBody{
 		Password:           password,
 		SLAVersionAccepted: "https://thingscloud.appspot.com/sla/v5.html",
 	})
@@ -86,8 +84,8 @@ func (s *common.AccountService) SignUp(email, password string) (*common.Client, 
 // ChangePassword allows you to change your account password.
 // Because things does not work with sessions you need to create a new client instance after
 // executing this method
-func (s *common.AccountService) ChangePassword(newPassword string) (*common.Client, error) {
-	data, err := json.Marshal(common.accountRequestBody{
+func (s *AccountService) ChangePassword(newPassword string) (*Client, error) {
+	data, err := json.Marshal(accountRequestBody{
 		Password: newPassword,
 	})
 	if err != nil {
